@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'calculator_app/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="calculator-wrapper">
+            <h1 class="title">🧮 Django Calculator</h1>
+            
+            <div class="auth-section">
+                {% if user.is_authenticated %}
+                    <span>Welcome, {{ user.username }}!</span>
+                    <a href="{% url 'calculator_app:history' %}" class="history-link">View History</a>
+                    <a href="{% url 'admin:logout' %}" class="logout-link">Logout</a>
+                {% else %}
+                    <span>Please login to save history</span>
+                    <a href="{% url 'admin:login' %}" class="login-link">Login</a>
+                {% endif %}
+            </div>
+            
+            <form method="post" class="calculator-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.expression }}
+                </div>
+                
+                <div class="button-grid">
+                    <button type="button" class="btn btn-num" data-value="7">7</button>
+                    <button type="button" class="btn btn-num" data-value="8">8</button>
+                    <button type="button" class="btn btn-num" data-value="9">9</button>
+                    <button type="button" class="btn btn-operator" data-value="/">÷</button>
+                    
+                    <button type="button" class="btn btn-num" data-value="4">4</button>
+                    <button type="button" class="btn btn-num" data-value="5">5</button>
+                    <button type="button" class="btn btn-num" data-value="6">6</button>
+                    <button type="button" class="btn btn-operator" data-value="*">×</button>
+                    
+                    <button type="button" class="btn btn-num" data-value="1">1</button>
+                    <button type="button" class="btn btn-num" data-value="2">2</button>
+                    <button type="button" class="btn btn-num" data-value="3">3</button>
+                    <button type="button" class="btn btn-operator" data-value="-">−</button>
+                    
+                    <button type="button" class="btn btn-num" data-value="0">0</button>
+                    <button type="button" class="btn btn-num" data-value=".">.</button>
+                    <button type="button" class="btn btn-clear" id="clear-btn">C</button>
+                    <button type="button" class="btn btn-operator" data-value="+">+</button>
+                    
+                    <button type="button" class="btn btn-operator" data-value="(">(</button>
+                    <button type="button" class="btn btn-operator" data-value=")">)</button>
+                    <button type="button" class="btn btn-operator" data-value="%">%</button>
+                    <button type="submit" class="btn btn-equal">=</button>
+                </div>
+            </form>
+            
+            {% if result %}
+                <div class="result-section">
+                    <div class="expression-display">{{ expression }}</div>
+                    <div class="result-display">= {{ result }}</div>
+                </div>
+            {% endif %}
+            
+            {% if user.is_authenticated and history %}
+                <div class="recent-history">
+                    <h3>Recent Calculations</h3>
+                    <ul>
+                        {% for item in history %}
+                            <li>{{ item.expression }} = {{ item.result }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <script src="{% static 'calculator_app/js/calculator.js' %}"></script>
+</body>
+</html>

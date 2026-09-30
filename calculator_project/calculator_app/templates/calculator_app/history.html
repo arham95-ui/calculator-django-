@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculation History</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'calculator_app/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="history-wrapper">
+            <h1>📊 Calculation History</h1>
+            
+            <div class="nav-links">
+                <a href="{% url 'calculator_app:calculator' %}" class="back-link">← Back to Calculator</a>
+                <span>Welcome, {{ user.username }}!</span>
+            </div>
+            
+            {% if history %}
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Expression</th>
+                            <th>Result</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in history %}
+                            <tr>
+                                <td>{{ item.expression }}</td>
+                                <td>= {{ item.result }}</td>
+                                <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="no-history">No calculation history found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
